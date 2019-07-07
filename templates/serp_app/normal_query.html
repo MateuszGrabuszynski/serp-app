@@ -1,0 +1,16 @@
+{% extends "serp_app/base.html" %}
+{% load static %}
+
+{% block title %}Appchance SERP recruitment task - normal query{% endblock %}
+
+{% block content %}
+    <h1>Normal Query...</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include 'serp_app/normal_query_form.html' %}
+        <button type="submit">
+            Submit query
+        </button>
+    </form>
+{% endblock %}

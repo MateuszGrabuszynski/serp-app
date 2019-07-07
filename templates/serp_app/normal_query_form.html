@@ -1,0 +1,28 @@
+{% load widget_tweaks %}
+
+<script>
+    "use strict";
+
+    console.log("Query utilities loaded successfully"); //TODO: remove this line
+
+    function popUA() {
+        var ua_field = document.getElementById('id_user_agent');
+        var ua = navigator.userAgent;
+        ua_field.innerHTML = ua;
+    }
+</script>
+
+{% for field in form.visible_fields %}
+    {% if field.name == "user_ip" %}
+        {% render_field field style="display:none" value="1.2.3.1" %}
+    {% else %}
+        <div class="form_field">
+            {{ field.label_tag }}<br>
+            {% if field.help_text %}
+                <small>{{ field.help_text }}</small>
+            {% endif %}<br>
+            {% render_field field %}
+        </div>
+    {% endif %}
+{% endfor %}
+<input type="button" onclick="popUA()" value="Use my browser's User-Agent"/>
