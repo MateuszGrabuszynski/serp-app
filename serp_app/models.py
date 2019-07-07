@@ -6,7 +6,7 @@ class Config(models.Model):
     name = models.CharField(max_length=20)
     cache_time_limit = models.IntegerField(validators=[MinValueValidator(0)])  # 0 = don't cache
     default_user_agent = models.TextField()
-    proxies = models.TextField()  # comma-separated celery workers IPs
+    proxies = models.TextField()  # comma-separated IPs
 
     def __str__(self):
         return f'{self.name} config'

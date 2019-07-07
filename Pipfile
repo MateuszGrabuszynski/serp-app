@@ -9,8 +9,10 @@ django-environ = "==0.4.5"  # easy read of environment variables
 psycopg2-binary = "==2.7.5"  # postgreSQL
 django-widget-tweaks = "==1.4.5"  # forms and css tweaks
 dj-database-url = "==0.5.0"  # easier database url
-celery = {extras = ["redis"],version = "*"}  # tasks for celery // before: ==4.3.0
+celery = {extras = ["redis"],version = "==4.3.0"}  # tasks for celery // before version: *
 redis = "==3.2.1"  # database for celery tasks
+requests = "==2.21.0"  # making http requests
+beautifulsoup4 = "==4.7.1"  # parsing HTML
 freezegun = "==0.3.12"  # this is used to freeze timedate for testing
 
 [dev-packages]
