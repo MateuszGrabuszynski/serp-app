@@ -1,12 +1,18 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+
+
+class Proxy(models.Model):
+    name = models.CharField(max_length=20)
+    ip = models.GenericIPAddressField()
+    port = models.IntegerField(default=80, validators=[MinValueValidator(1), MaxValueValidator(65535)])
+    country = models.CharField(default='unknown', max_length=255)
 
 
 class Config(models.Model):
     name = models.CharField(max_length=20)
     cache_time_limit = models.IntegerField(validators=[MinValueValidator(0)])  # 0 = don't cache
     default_user_agent = models.TextField()
-    proxies = models.TextField()  # comma-separated IPs
 
     def __str__(self):
         return f'{self.name} config'
@@ -18,6 +24,7 @@ class Search(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     no_returned_results = models.IntegerField()
     user_agent = models.TextField()
+    proxy_ip = models.GenericIPAddressField(null=True, blank=True)
 
     # JSON formatted table, i.e. [["word", frequency], ["word", frequency]...]
     top_ten_words_headers = models.TextField(null=True, blank=True)
