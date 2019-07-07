@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "==2.2.3"
+django-environ = "==0.4.5"  # easy read of environment variables
+psycopg2-binary = "==2.7.5"  # postgreSQL
+django-widget-tweaks = "==1.4.5"  # forms and css tweaks
+dj-database-url = "==0.5.0"  # easier database url
+celery = {extras = ["redis"],version = "*"}  # tasks for celery // before: ==4.3.0
+redis = "==3.2.1"  # database for celery tasks
+freezegun = "==0.3.12"  # this is used to freeze timedate for testing
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
