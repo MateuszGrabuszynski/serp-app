@@ -1,0 +1,36 @@
+{% extends 'serp_app/base.html' %}
+{% load frequencies %}
+
+{% block title %}SERP -> Results for query{% endblock %}
+
+{% block content %}
+    <h1>Result for query: {{ search.query }}</h1>
+    <p><b>Timestamp: </b> {{ search.timestamp }}</p>
+    <p><b>User IP: </b> {{ search.user_ip }}</p>
+    <p><b>User-Agent: </b> {{ search.user_agent }}</p>
+    <p><b>Proxy IP: </b> {{ search.proxy_ip }}</p>
+
+    <h2>Results</h2>
+    <p>All returned by Google: {{ search.no_returned_results }} results</p>
+    {% for res in search.results.all %}
+        <h3>{{ res.header }}</h3>
+        <a href="{{ res.link }}">{{ res.link }}</a>
+        <p>{{ res.description }}</p>
+    {% empty %}
+        <p>No results were saved or they were deleted</p>
+    {% endfor %}
+
+    {# I know this actually is NOT "safe" to do as below... #}
+    <h2>Top ten words in headers:</h2>
+    <div id="t10h">
+        {{ search.top_ten_words_headers|frequencies|safe }}
+    </div>
+    <h2>Top ten words in descriptions:</h2>
+    <div id="t10d">
+        {{ search.top_ten_words_descriptions|frequencies|safe }}
+    </div>
+    <h2>Top ten words in headers&descriptions:</h2>
+    <div id="t10hd">
+        {{ search.top_ten_words_both|frequencies|safe }}
+    </div>
+{% endblock %}
