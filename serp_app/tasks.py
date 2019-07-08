@@ -22,7 +22,8 @@ def query_google(query, no_results_to_return, user_agent, proxy, user_ip):
         search_object = models.Search.objects.create(query=query, user_ip=user_ip, no_returned_results=no_returned,
                                                      user_agent=user_agent, proxy_ip=proxy,
                                                      top_ten_words_headers=h_stats, top_ten_words_descriptions=d_stats,
-                                                     top_ten_words_both=hd_stats)
+                                                     top_ten_words_both=hd_stats,
+                                                     task_id=query_google.request.id)
 
         curr_pos = 1
         for res in results:

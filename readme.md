@@ -19,4 +19,5 @@ docker-compose up
 
 ## Explain
 * Normally, I should not add `.env` file with `SECRET_KEY` here because of security, but it's more convenient to do it like that right now.
-* `no` is often used as an abbreviation of `number_of`, so i.e. `no_results` is `number_of_results`
+* `no` is often used as an abbreviation of `number_of`, so i.e. `no_results` is `number_of_results`.
+* Sometimes there is one or more results missing (i.e. when you type 30, you get 29 results) - that's because some of the additional Google boxes in search are counted as a result (tweaks would be needed to repair that behaviour).

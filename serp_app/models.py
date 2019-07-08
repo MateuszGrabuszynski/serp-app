@@ -25,6 +25,7 @@ class Search(models.Model):
     no_returned_results = models.BigIntegerField()
     user_agent = models.TextField()
     proxy_ip = models.GenericIPAddressField(null=True, blank=True)
+    task_id = models.TextField(null=True, blank=True)
 
     # JSON formatted table, i.e. [["word", frequency], ["word", frequency]...]
     top_ten_words_headers = models.TextField(null=True, blank=True)

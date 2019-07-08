@@ -1,7 +1,9 @@
 from django import urls
-from django.shortcuts import render
+from django.http import HttpResponse
 from django.utils import timezone
+from django.views import View
 from django.views.generic import edit, detail
+from django.shortcuts import redirect
 
 from serp_app import models, forms, tasks
 
@@ -10,12 +12,42 @@ class QueryResults(detail.DetailView):
     model = models.Search
 
 
+class QueryResultsByTask(View):
+    def get(self, request, *args, **kwargs):
+        task_id = kwargs['task_id']
+
+        check = models.Search.objects.filter(task_id=task_id)
+
+        if check:
+            return redirect(urls.reverse('serp_app:search_results', kwargs={'pk': check.first().pk}))
+        else:
+            qstring = request.GET.urlencode()
+            timeout_pos = qstring.find('timeout=')
+            if timeout_pos > 0:
+                timeout_end = qstring[timeout_pos + 8:].find('&')
+                if timeout_end > 0:
+                    timeout = int(qstring[timeout_pos + 8:timeout_pos + 8 + timeout_end])
+                else:
+                    timeout = int(qstring[timeout_pos + 8:])
+            else:
+                timeout = 2
+
+            if timeout < 10:
+                timeout += 2
+            else:
+                timeout += 10
+
+            reverse_url = f"{urls.reverse('serp_app:search_results_by_task', kwargs={'task_id': task_id})}?timeout={timeout}"
+            html = f'''
+                <html><head><meta http-equiv="refresh" content="{timeout}; url={reverse_url}"></head><body>Please wait. Your results are being prepared.
+                If the page does not reload, <a href="{reverse_url}">click here</a></body></html>
+            '''
+            return HttpResponse(html, status=202)
+
+
 class NormalQueryView(edit.FormView):
-    # model = models.Search
     form_class = forms.NormalQueryForm
     template_name = 'serp_app/normal_query.html'
-
-    # success_url = '.'  # self
 
     def form_valid(self, form, *args, **kwargs):
         # get the data from request and form
@@ -41,11 +73,10 @@ class NormalQueryView(edit.FormView):
 
         if element:  # use cache
             print('Returned result from cache!')
-            tag = element.first().pk
+            pk_num = element.first().pk
+            self.success_url = urls.reverse('serp_app:search_results', kwargs={'pk': pk_num})
         else:  # make the query
-            tag = 0  # FIXME: this aint working for sure...
-            tasks.query_google(query, no_rtr, ua, proxy, user_ip)
-            # print(f'From the outside of the task... {tag}')
-        self.success_url = urls.reverse('serp_app:search_results', kwargs={'query': tag})
+            task_id = tasks.query_google.delay(query, no_rtr, ua, proxy, user_ip)
+            self.success_url = urls.reverse('serp_app:search_results_by_task', kwargs={'task_id': task_id})
 
         return super().form_valid(form)
