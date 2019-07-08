@@ -9,9 +9,9 @@ app = Celery()
 
 @shared_task
 def query_google(query, no_results_to_return, user_agent, proxy, user_ip):
-    # TODO: set default user_agent or return it from utils.query_google()
-    # print(f'From the inside of the task... {query_google.request.id}')
-    # info = f'query: {query} // no_res: {no_results_to_return} // ua: {user_agent} // proxy: {proxy} // ip: {user_ip}'
+    if not user_agent or user_agent == '':
+        config = models.Config.objects.first()
+        user_agent = config.default_user_agent
 
     no_returned, results, h_stats, d_stats, hd_stats = utils.query_google(query,
                                                                           no_results_to_return=no_results_to_return,
