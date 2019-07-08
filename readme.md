@@ -8,6 +8,7 @@ First run:
 2. Build containers
 3. Make migrations
 4. Create superuser
+5. Create one record in Config (may be through Django Admin)
 
 It should be something like that:
 ```

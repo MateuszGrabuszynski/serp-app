@@ -5,6 +5,8 @@ import requests
 
 from collections import Counter
 
+from serp_app import models
+
 
 def first_number_from_string(string):
     result_string = ''  # output table
@@ -15,7 +17,7 @@ def first_number_from_string(string):
         if char in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
             result_string += char
             found = True
-        elif char != ',' and found:
+        elif (char not in [',', ' ']) and found:
             break
         else:
             continue
@@ -64,8 +66,9 @@ def query_google(query, no_results_to_return=10, user_agent='', proxy=''):
     if user_agent != '':
         request_headers['User-Agent'] = f'{user_agent}'
     else:
-        # TODO: make this default if empty!
-        request_headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0'
+        def_ua = models.Config.objects.first().default_user_agent
+        if def_ua:
+            request_headers['User-Agent'] = def_ua
     session.headers.update(request_headers)
 
     # setting proxy
