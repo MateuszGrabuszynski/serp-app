@@ -13,7 +13,7 @@
     <h2>Results</h2>
     <p>All returned by Google: {{ search.no_returned_results }} results</p>
     {% for res in search.results.all %}
-        <h3>{{ res.header }}</h3>
+        <h3>{{ res.position }}. {{ res.header }}</h3>
         <a href="{{ res.link }}">{{ res.link }}</a>
         <p>{{ res.description }}</p>
     {% empty %}

@@ -22,7 +22,7 @@ class Search(models.Model):
     query = models.TextField()
     user_ip = models.GenericIPAddressField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    no_returned_results = models.IntegerField()
+    no_returned_results = models.BigIntegerField()
     user_agent = models.TextField()
     proxy_ip = models.GenericIPAddressField(null=True, blank=True)
 
@@ -39,6 +39,9 @@ class Search(models.Model):
 
 
 class Result(models.Model):
+    class Meta:
+        ordering = ('position',)
+
     search_id = models.ForeignKey(Search, on_delete=models.CASCADE, related_name='results')
     header = models.TextField()
     link = models.URLField()

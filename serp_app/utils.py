@@ -87,9 +87,15 @@ def query_google(query, no_results_to_return=10, user_agent='', proxy=''):
     search_results = soup.find_all('div', 'g')
     for res in search_results:
         header = res.find('h3')
+        print('H3:', header)
         link = res.find('a')
+        print('A:', link)
         description = res.find('div', 's')
-        results.append((header.text, link.get('href'), description.text))
+        print('DESC:', description)
+        if not header or not link or not description:
+            continue
+        else:
+            results.append((header.text, link.get('href'), description.text))
 
     h_stats, d_stats, hd_stats = get_statistics(results)
 
@@ -100,4 +106,4 @@ def query_google(query, no_results_to_return=10, user_agent='', proxy=''):
     print("-HD-")
     print(hd_stats)
 
-    return number_of_results, results
+    return number_of_results, results, h_stats, d_stats, hd_stats

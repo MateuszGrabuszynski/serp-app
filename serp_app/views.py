@@ -40,11 +40,12 @@ class NormalQueryView(edit.FormView):
                                                user_ip=user_ip, timestamp__gt=ts_gt)
 
         if element:  # use cache
+            print('Returned result from cache!')
             tag = element.first().pk
         else:  # make the query
             tag = 0  # FIXME: this aint working for sure...
             tasks.query_google(query, no_rtr, ua, proxy, user_ip)
             # print(f'From the outside of the task... {tag}')
-        self.success_url = urls.reverse('serp_app:query_results', kwargs={'query': tag})
+        self.success_url = urls.reverse('serp_app:search_results', kwargs={'query': tag})
 
         return super().form_valid(form)
