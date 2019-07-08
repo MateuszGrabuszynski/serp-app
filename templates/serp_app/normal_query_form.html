@@ -13,12 +13,12 @@
 </script>
 
 {% for field in form.visible_fields %}
-    <div class="form_field">
-        {{ field.label_tag }}<br>
-        {% if field.help_text %}
-            <small>{{ field.help_text }}</small>
-        {% endif %}<br>
+    <div class="form_field" style="margin-top:5px;margin-bottom:5px">
+        <h2>{{ field.label_tag }}</h2>
         {% render_field field %}
+        {% if field.help_text %}
+            <p style="margin-top:2px;"><small>{{ field.help_text }}</small></p>
+        {% endif %}
     </div>
 {% endfor %}
 <input type="button" onclick="popUA()" value="Use my browser's User-Agent"/>
