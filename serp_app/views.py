@@ -2,7 +2,7 @@ from django import urls
 from django.http import HttpResponse
 from django.utils import timezone
 from django.views import View
-from django.views.generic import edit, detail
+from django.views.generic import edit, detail, list
 from django.shortcuts import redirect
 
 from serp_app import models, forms, tasks
@@ -21,26 +21,22 @@ class QueryResultsByTask(View):
         if check:
             return redirect(urls.reverse('serp_app:search_results', kwargs={'pk': check.first().pk}))
         else:
-            qstring = request.GET.urlencode()
-            timeout_pos = qstring.find('timeout=')
-            if timeout_pos > 0:
-                timeout_end = qstring[timeout_pos + 8:].find('&')
-                if timeout_end > 0:
-                    timeout = int(qstring[timeout_pos + 8:timeout_pos + 8 + timeout_end])
-                else:
-                    timeout = int(qstring[timeout_pos + 8:])
-            else:
-                timeout = 2
+            retry = 1
 
-            if timeout < 10:
-                timeout += 2
-            else:
-                timeout += 10
+            try:
+                qs = request.GET.urlencode()
+                qs_spl = qs.split("=")
+                if qs_spl[0] == 'retry':
+                    retry = int(qs_spl[1])
+            except Exception:
+                pass
 
-            reverse_url = f"{urls.reverse('serp_app:search_results_by_task', kwargs={'task_id': task_id})}?timeout={timeout}"
+            reverse_url = f"{urls.reverse('serp_app:search_results_by_task', kwargs={'task_id': task_id})}?retry={retry+1}"
             html = f'''
-                <html><head><meta http-equiv="refresh" content="{timeout}; url={reverse_url}"></head><body>Please wait. Your results are being prepared.
-                If the page does not reload, <a href="{reverse_url}">click here</a></body></html>
+                <html><head><meta http-equiv="refresh" content="{retry + 2 if retry < 5 else retry*5}; url={reverse_url}"></head>
+                <body>Please wait. Your results are being prepared.
+                If the page does not reload, <a href="{reverse_url}">click here</a>.
+                If you want to cancel, <a href="{urls.reverse('serp_app:latest_searches')}">click here</a>.</body></html>
             '''
             return HttpResponse(html, status=202)
 
@@ -80,3 +76,8 @@ class NormalQueryView(edit.FormView):
             self.success_url = urls.reverse('serp_app:search_results_by_task', kwargs={'task_id': task_id})
 
         return super().form_valid(form)
+
+
+class LatestSearchesView(list.ListView):
+    model = models.Search
+    context_object_name = 'searches'

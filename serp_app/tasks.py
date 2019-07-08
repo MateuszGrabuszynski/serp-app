@@ -17,7 +17,6 @@ def query_google(query, no_results_to_return, user_agent, proxy, user_ip):
                                                                           no_results_to_return=no_results_to_return,
                                                                           user_agent=user_agent, proxy=proxy)
 
-    # TODO: Is this transaction ok?
     with transaction.atomic():
         search_object = models.Search.objects.create(query=query, user_ip=user_ip, no_returned_results=no_returned,
                                                      user_agent=user_agent, proxy_ip=proxy,

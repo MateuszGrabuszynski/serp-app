@@ -5,6 +5,14 @@
     <title>{% block title %}Appchance SERP recruitment task{% endblock %}</title>
 </head>
 <body>
+    <div id="menu">
+        <nav>
+            <ul>
+                <li><a href="{% url 'serp_app:normal_query' %}">New search</a></li>
+                <li><a href="{% url 'serp_app:latest_searches' %}">Latest searches</a></li>
+            </ul>
+        </nav>
+    </div>
     {% block content %}{% endblock %}
 </body>
 </html>

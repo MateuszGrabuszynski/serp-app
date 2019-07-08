@@ -1,0 +1,17 @@
+{% extends 'serp_app/base.html' %}
+{% block title %}Latest SERP searches{% endblock %}
+
+{% block content %}
+    <h1>Current searches</h1>
+
+    {% if not searches %}
+        No current searches has been found
+    {% else %}
+        {% for search in searches.all|dictsortreversed:'timestamp' %}
+            <li>
+                <li><a href="{% url 'serp_app:search_results' search.pk %}">{{ search.query }}</a></li>
+            </ul>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
