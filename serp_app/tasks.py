@@ -26,8 +26,8 @@ def query_google(query, no_results_to_return, user_agent, proxy, user_ip):
 
         curr_pos = 1
         for res in results:
-            curr_pos += 1
             models.Result.objects.create(search_id=search_object, header=res[0], link=res[1], description=res[2],
                                          position=curr_pos)
+            curr_pos += 1
 
     return True
