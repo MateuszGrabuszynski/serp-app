@@ -9,6 +9,7 @@ First run:
 3. Make migrations
 4. Create superuser
 
+It should be something like that:
 ```
 docker volume create serp_db_data
 docker volume create serp_redis_data
