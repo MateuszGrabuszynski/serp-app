@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "==2.2.8"
+django = "==2.2.10"
 django-environ = "==0.4.5"  # easy read of environment variables
 psycopg2-binary = "==2.7.5"  # postgreSQL
 django-widget-tweaks = "==1.4.5"  # forms and css tweaks
